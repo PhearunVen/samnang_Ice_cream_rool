@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:samnang_ice_cream_roll/widgets/forgot_password.dart';
 import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
 
 class SignIn extends StatefulWidget {
@@ -129,7 +130,10 @@ class _SignInState extends State<SignIn> {
                   const Text("Lost your password? "),
                   InkWell(
                     onTap: () {
-                      // Navigate to a password reset page
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPassword()));
                     },
                     child: const Text(
                       "Reset password",

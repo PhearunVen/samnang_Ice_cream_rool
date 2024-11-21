@@ -10,6 +10,54 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  int cartItemCount = 1;
+
+  double total = 3;
+  double sunTotal = 3;
+  double currentSubTotal = 0; // Variable to hold the subtotal
+  double currentTotal = 0; // Variable to hold the total
+
+  // Method to increase the cart item count
+  void increaseItem() {
+    setState(() {
+      cartItemCount++;
+      subTotal(); // Recalculate subtotal when items are added
+      totalItem();
+    });
+  }
+
+  // Method to decrease the cart item count
+  void decreaseItem() {
+    setState(() {
+      if (cartItemCount > 1) {
+        cartItemCount--;
+        subTotal(); // Recalculate subtotal when items are removed
+        totalItem();
+      }
+    });
+  }
+
+  // Method to calculate the subtotal
+  void subTotal() {
+    setState(() {
+      currentSubTotal = cartItemCount * sunTotal;
+    });
+  }
+
+  // Method to calculate the total price (can include taxes, discounts, etc.)
+  void totalItem() {
+    setState(() {
+      currentTotal = cartItemCount * total; // You can add more logic here
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    subTotal(); // Initialize the subtotal
+    totalItem(); // Initialize the total price
+  }
+
   double discountPercentage = 0;
   void _showDiscountDialog() {
     showDialog(
@@ -114,13 +162,14 @@ class _OrderPageState extends State<OrderPage> {
                               IconButton(
                                 onPressed: () {
                                   // Decrease quantity
+                                  decreaseItem();
                                 },
                                 icon: const Icon(Icons.remove, size: 25),
                                 color: Colors.red,
                               ),
-                              const Text(
-                                '1', // Display the quantity here
-                                style: TextStyle(
+                              Text(
+                                '$cartItemCount', // Display the quantity here
+                                style: const TextStyle(
                                   fontSize: 25,
                                   color: Colors.black,
                                 ),
@@ -128,6 +177,7 @@ class _OrderPageState extends State<OrderPage> {
                               IconButton(
                                 onPressed: () {
                                   // Increase quantity
+                                  increaseItem();
                                 },
                                 icon: const Icon(Icons.add, size: 25),
                                 color: Colors.grey,
@@ -142,23 +192,20 @@ class _OrderPageState extends State<OrderPage> {
               ],
             ),
             Divider(height: 40, color: Colors.grey.shade400),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Sub Total',
                   style: TextStyle(fontSize: 16),
                 ),
-                Text(
-                  '\$3.00',
-                  style: TextStyle(fontSize: 16),
-                ),
+                Text('\$${currentSubTotal.toStringAsFixed(2)}'),
               ],
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Total',
                   style: TextStyle(
                     fontSize: 18,
@@ -166,8 +213,8 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
                 Text(
-                  '\$3.00',
-                  style: TextStyle(
+                  '\$${currentTotal.toStringAsFixed(2)}',
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),

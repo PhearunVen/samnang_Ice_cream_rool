@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:samnang_ice_cream_roll/model/ice_cream_Item.dart';
+import 'package:samnang_ice_cream_roll/model/my_ice_cream_item.dart';
+import 'package:samnang_ice_cream_roll/pages/ice_cream_cart.dart';
 import 'package:samnang_ice_cream_roll/pages/my_drawer.dart';
 import 'package:samnang_ice_cream_roll/pages/order_page.dart';
 import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
@@ -14,6 +17,16 @@ class HomeStuff extends StatefulWidget {
 
 class _HomeStuffState extends State<HomeStuff> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int cartItemCount = 0;
+  int isSelected = 0;
+  // Function to simulate adding items to the cart
+  void addToCart() {
+    setState(() {
+      cartItemCount++; // Increment cart item count
+    });
+    //  print("Item added to cart. Total items: $cartItemCount"); // Debugging line
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,15 +59,50 @@ class _HomeStuffState extends State<HomeStuff> {
                           // Add search functionality
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.shopping_cart_checkout_outlined),
-                        onPressed: () {
-                          // Add shopping cart functionality
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const OrderPage()));
-                        },
+                      Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.shopping_cart_outlined),
+                            onPressed: () {
+                              // Navigate to the order page or cart page
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const OrderPage()));
+                            },
+                          ),
+                          if (cartItemCount >
+                              0) // Only show the badge if the count is greater than 0
+                            Positioned(
+                              right: 5, // Adjust the position of the badge
+                              top: 2,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Optional: Add functionality for tapping the badge (e.g., open cart)
+                                },
+                                child: Container(
+                                  width: 15,
+                                  height: 20,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '$cartItemCount', // Display the dynamic cart count
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),
@@ -79,44 +127,14 @@ class _HomeStuffState extends State<HomeStuff> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     // Container for "All"
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 110, 51, 237),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'All',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
+                    builAllIceCreamItem(
+                        index: 0, name: "All", color: Colors.purple),
                     // Container for "Fruit"
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.pink,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'Fruit',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
+                    builAllIceCreamItem(
+                        index: 1, name: "Fruit", color: Colors.red),
                     // Container for "Syrups"
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'Syrups',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
+                    builAllIceCreamItem(
+                        index: 2, name: "Syrups", color: Colors.green),
                   ],
                 ),
               ),
@@ -124,80 +142,107 @@ class _HomeStuffState extends State<HomeStuff> {
             const SizedBox(
               height: 10,
             ),
-            GridView.count(
-                crossAxisCount: 3,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: [
-                  Container(
-                    child: cardBox(
-                        image: const AssetImage('assets/images/mongo.png'),
-                        price: 2.5),
-                  ),
-                  Container(
-                    child: cardBox(
-                        image: const AssetImage('assets/images/mongo.png'),
-                        price: 2.5),
-                  ),
-                  Container(
-                    child: cardBox(
-                        image: const AssetImage('assets/images/mongo.png'),
-                        price: 2.5),
-                  ),
-                  Container(
-                    child: cardBox(
-                        image: const AssetImage('assets/images/mongo.png'),
-                        price: 2.5),
-                  ),
-                  Container(
-                    child: cardBox(
-                        image: const AssetImage('assets/images/mongo.png'),
-                        price: 2.5),
-                  ),
-                ]),
+            SizedBox(
+              height: MediaQuery.of(context).size.height -
+                  200, // Adjust height as needed
+              child: isSelected == 0
+                  ? buildAllIceCreamItem()
+                  : isSelected == 1
+                      ? buildFruitIceCreamItem()
+                      : buildSyrupsIceCreamItem(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget cardBox({required ImageProvider image, required double price}) {
-    return SizedBox(
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: InkWell(
-          onTap: () {},
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(15),
-                  ),
-                  child: Image(
-                    image: image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '\$${price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
+  builAllIceCreamItem({
+    required int index,
+    required String name,
+    required Color color,
+  }) =>
+      InkWell(
+        onTap: () => setState(() => isSelected = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            name,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
-      ),
-    );
-  }
+      );
+
+  buildAllIceCreamItem() => GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: (100 / 140),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        scrollDirection: Axis.vertical,
+        itemCount: MyIceCreamItem.allIceCreamItem.length,
+        itemBuilder: (context, index) {
+          final allIceCreamItem = MyIceCreamItem.allIceCreamItem[index];
+          return GestureDetector(
+            // onTap: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => DetailsScreen(product: allProducts))),
+            child: IceCreamCart(
+              iceCreamItem: allIceCreamItem,
+            ),
+          );
+        },
+      );
+
+  buildFruitIceCreamItem() => GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: (100 / 140),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        scrollDirection: Axis.vertical,
+        itemCount: MyIceCreamItem.fruitIceCreamItem.length,
+        itemBuilder: (context, index) {
+          final fruitIceCreamItem = MyIceCreamItem.fruitIceCreamItem[index];
+          return GestureDetector(
+            // onTap: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => DetailsScreen(product: allProducts))),
+            child: IceCreamCart(
+              iceCreamItem: fruitIceCreamItem,
+            ),
+          );
+        },
+      );
+
+  buildSyrupsIceCreamItem() => GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: (100 / 140),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        scrollDirection: Axis.vertical,
+        itemCount: MyIceCreamItem.syrupsIceCreamItem.length,
+        itemBuilder: (context, index) {
+          final syrupsIceCreamItem = MyIceCreamItem.syrupsIceCreamItem[index];
+          return GestureDetector(
+            // onTap: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => DetailsScreen(product: allProducts))),
+            child: IceCreamCart(
+              iceCreamItem: syrupsIceCreamItem,
+            ),
+          );
+        },
+      );
 }
