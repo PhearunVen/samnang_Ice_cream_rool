@@ -26,7 +26,7 @@ class _SignUpState extends State<SignUp> {
         // Navigate to home page after registration (if necessary)
       } catch (e) {
         // Handle registration error, e.g., show a dialog
-        print('Error registering: $e');
+        //  print('Error registering: $e');
       }
     } else {
       // Show error message if passwords do not match

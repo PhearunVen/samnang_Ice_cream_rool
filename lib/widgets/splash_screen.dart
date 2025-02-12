@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:samnang_ice_cream_roll/widgets/sing_up.dart';
-import 'package:samnang_ice_cream_roll/widgets/sign_in.dart';
+import 'package:samnang_ice_cream_roll/admin/pages/admin_page.dart';
+import 'package:samnang_ice_cream_roll/screen/staff_main_screen.dart';
+import 'package:samnang_ice_cream_roll/widgets/login_page.dart';
+import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool showSignInPage = true;
   void toggleScreen() {
     setState(() {
@@ -17,20 +24,69 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  String? _storedEmail;
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+// Retrieve email from local storage
+  Future<String?> getStoredEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('email');
+  }
+
+  // Check login status (e.g., for auto-login on app start)
+  Future<void> checkLoginStatus() async {
+    try {
+      // Retrieve the stored email from local storage
+      String? storedEmail = await getStoredEmail();
+      setState(() {
+        _storedEmail = storedEmail;
+      });
+
+      if (storedEmail != null && storedEmail.isNotEmpty) {
+        // Fetch user data from Firestore using the stored email
+        QuerySnapshot snapshot = await _firestore
+            .collection('stores')
+            .where('email', isEqualTo: storedEmail)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          var userDoc = snapshot.docs.first;
+          String role = userDoc['role'];
+
+          // Navigate based on the role
+          if (role == 'admin') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AdminPage()),
+            );
+          } else if (role == 'staff') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const StaffMainScreen()),
+            );
+          } else {
+            Navigator.pop(context);
+          }
+        } else {
+          // No matching email found
+        }
+      } else {
+        // No stored email found, handle accordingly (e.g., stay on login page)
+      }
+    } catch (e) {
+      // Handle any errors, such as network issues or Firestore errors
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 182, 182, 241), // Start color
-              Color.fromARGB(255, 222, 242, 215), // End color
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: MyColors.gradientColors),
         child: Container(
           margin: const EdgeInsets.only(top: 120),
           child: Center(
@@ -90,87 +146,52 @@ class _SplashScreenState extends State<SplashScreen> {
                 Positioned(
                   top: 230,
                   left: 60,
-                  child: Container(
-                    width: 250,
-                    height: 270,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFFFEC8D8),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.icecream,
-                        size: 100,
-                        color: Colors.brown,
-                      ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/ice-cream.png', // Path to your image asset
+                      width: 250, // Width of the circular area
+                      height: 270, // Height of the circular area
+                      fit: BoxFit
+                          .cover, // Ensures the image covers the circular area
                     ),
                   ),
                 ),
-                // Sign In and Sign Up Buttons
-                Positioned(
-                  top: 530,
-                  left: 130,
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle sign-in action
-                          Navigator.push(
+                // Sign In Button (Conditional Visibility)
+                if (_storedEmail == null) // Only show if not signed in
+                  Positioned(
+                    top: 530,
+                    left: 130,
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // Handle sign-in action
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignIn(
-                                        showSignUpPage: toggleScreen,
-                                      )));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFFCBC0E1), // Button color
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MyColors.mybutton,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text(
+                            'Get Started',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20), // Space between buttons
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle sign-up action
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignUp(
-                                      showSignInPage: toggleScreen,
-                                    )),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFFCBC0E1), // Button color
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),

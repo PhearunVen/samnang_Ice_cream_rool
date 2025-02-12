@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -47,29 +44,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD-PQE6pANFE25T5nMmrwvwjhSNPYRfXSc',
-    appId: '1:369151569036:android:ca1e03e7911a1a4e429fa9',
-    messagingSenderId: '369151569036',
-    projectId: 'samnangicecream-ddabe',
-    storageBucket: 'samnangicecream-ddabe.firebasestorage.app',
+    apiKey: 'AIzaSyAQyoOLyqnU-6YY8Hb9qIyyO-jCO_lpCyI',
+    appId: '1:580385448897:android:62d6c63172369f5bdf0540',
+    messagingSenderId: '580385448897',
+    projectId: 'instagram-ef80e',
+    storageBucket: 'instagram-ef80e.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAxRNjcUyWJImkHOvp8uNl8BvcM4-n2sH8',
-    appId: '1:369151569036:ios:54b8df62f88bf37e429fa9',
-    messagingSenderId: '369151569036',
-    projectId: 'samnangicecream-ddabe',
-    storageBucket: 'samnangicecream-ddabe.firebasestorage.app',
+    apiKey: 'AIzaSyB-kiutqV_ehqVG8acyAewDI7gGPREME3s',
+    appId: '1:580385448897:ios:1c4018ee31e6d541df0540',
+    messagingSenderId: '580385448897',
+    projectId: 'instagram-ef80e',
+    storageBucket: 'instagram-ef80e.appspot.com',
     iosBundleId: 'com.example.samnangIceCreamRoll',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDW14OuySSM5dfUr6d80eDEWPV6IFV4-rQ',
-    appId: '1:369151569036:web:f97dfb7b8b760048429fa9',
-    messagingSenderId: '369151569036',
-    projectId: 'samnangicecream-ddabe',
-    authDomain: 'samnangicecream-ddabe.firebaseapp.com',
-    storageBucket: 'samnangicecream-ddabe.firebasestorage.app',
-    measurementId: 'G-XW4EQNXQ2P',
+    apiKey: 'AIzaSyAgbpzLVEkJOgIMhZws8z82iiBrWZUAlBY',
+    appId: '1:421174144787:web:1d9b22b6e2a14ee0ad74e6',
+    messagingSenderId: '421174144787',
+    projectId: 'myicecream-89f8d',
+    authDomain: 'myicecream-89f8d.firebaseapp.com',
+    storageBucket: 'myicecream-89f8d.firebasestorage.app',
+    measurementId: 'G-57R557FE53',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyB6psq5cVpRf4D1SpNVh45CsBygWYuC5PA',
+    appId: '1:580385448897:web:8a72dbb5fa8453cddf0540',
+    messagingSenderId: '580385448897',
+    projectId: 'instagram-ef80e',
+    authDomain: 'instagram-ef80e.firebaseapp.com',
+    storageBucket: 'instagram-ef80e.appspot.com',
+    measurementId: 'G-S70BPE2FVJ',
+  );
+
 }

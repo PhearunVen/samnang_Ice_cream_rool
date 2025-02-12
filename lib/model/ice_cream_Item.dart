@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 class IceCreamItem {
   String id; // Unique identifier for each ice cream roll
   String flavor; // Flavor of the ice cream roll
@@ -14,4 +16,16 @@ class IceCreamItem {
     this.toppings = const [],
     this.quantity = 1,
   });
+
+  // Factory method to create IceCreamItem from Firestore data
+  factory IceCreamItem.fromFirestore(Map<String, dynamic> data, String id) {
+    return IceCreamItem(
+      id: id,
+      flavor: data['flavor'],
+      price: data['price'].toDouble(),
+      imageUrl: data['imageUrl'], // Directly use the path or URL from Firestore
+      toppings: List<String>.from(data['toppings'] ?? []),
+      quantity: data['quantity'] ?? 1,
+    );
+  }
 }

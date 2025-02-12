@@ -30,6 +30,7 @@ class _SignInState extends State<SignIn> {
       );
       // Navigate to home page after sign-in (if necessary)
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error signing in: $e')),
       );

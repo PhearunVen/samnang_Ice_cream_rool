@@ -13,7 +13,8 @@ class MyBotton extends StatelessWidget {
           // Handle sign-in action
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFCBC0E1), // Button color
+          backgroundColor:
+              const Color.fromARGB(255, 198, 189, 215), // Button color
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),

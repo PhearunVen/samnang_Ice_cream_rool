@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore: use_key_in_widget_constructors
 class ForgotPassword extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
@@ -24,6 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
       // Show confirmation dialog and clear the email field on dialog close
       showDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -43,6 +46,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         },
       );
     } on FirebaseAuthException catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message ?? 'An error occurred')),
       );

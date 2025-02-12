@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "369151569036",
-    "project_id": "samnangicecream-ddabe",
-    "storage_bucket": "samnangicecream-ddabe.firebasestorage.app"
+    "project_number": "580385448897",
+    "project_id": "instagram-ef80e",
+    "storage_bucket": "instagram-ef80e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:369151569036:android:ca1e03e7911a1a4e429fa9",
+        "mobilesdk_app_id": "1:580385448897:android:62d6c63172369f5bdf0540",
         "android_client_info": {
           "package_name": "com.example.samnang_ice_cream_roll"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD-PQE6pANFE25T5nMmrwvwjhSNPYRfXSc"
+          "current_key": "AIzaSyAQyoOLyqnU-6YY8Hb9qIyyO-jCO_lpCyI"
         }
       ],
       "services": {

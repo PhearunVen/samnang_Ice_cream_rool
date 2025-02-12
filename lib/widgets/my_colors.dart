@@ -1,25 +1,37 @@
 import 'package:flutter/material.dart';
 
 class MyColors {
+  static const mybutton = Color.fromRGBO(245, 201, 217, 1.0);
+  static const myappbar = Color.fromRGBO(206, 187, 250, 1.0);
   // Define a LinearGradient property
   static const LinearGradient gradient = LinearGradient(
     colors: [
-      Color.fromARGB(255, 182, 182, 241), // Start color
-      Color.fromARGB(255, 222, 242, 215), // End color
+      Color.fromRGBO(206, 187, 250, 1.0), // #CEBBFA
+      Color.fromRGBO(245, 201, 217, 1.0), // #F5C9D9
+      Color.fromRGBO(182, 238, 227, 1), // #97E1D4
     ],
-    begin: Alignment.topLeft, // You can customize the direction of the gradient
-    end: Alignment.bottomRight,
+    stops: [0.0, 0.8, 1.1],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomLeft,
   );
   static const LinearGradient gradientCategory = LinearGradient(
     colors: [
-      // Start color
-      Color.fromARGB(255, 73, 17, 185),
-      // End color
-      Color.fromARGB(255, 189, 112, 236),
+      Color.fromRGBO(206, 187, 250, 1.0), // #CEBBFA
+      Color.fromRGBO(245, 201, 217, 1.0), // #F5C9D9
+      Color.fromRGBO(182, 238, 227, 1), // #97E1D4
     ],
-    begin:
-        Alignment.topRight, // You can customize the direction of the gradient
+    stops: [0.5, 0.85, 1.0],
+    begin: Alignment.topLeft,
     end: Alignment.bottomLeft,
   );
-  // You can add more colors or gradients here as needed
+  static const LinearGradient gradientColors = LinearGradient(
+    colors: [
+      Color.fromRGBO(206, 187, 250, 1.0), // #CEBBFA
+      Color.fromRGBO(245, 201, 217, 1.0), // #F5C9D9
+      Color.fromRGBO(182, 238, 227, 1), // #97E1D4
+    ],
+    stops: [0.5, 0.85, 1.0],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomLeft,
+  );
 }
