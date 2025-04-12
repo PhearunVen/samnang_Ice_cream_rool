@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
 
 class ManageStaffPage extends StatefulWidget {
   const ManageStaffPage({super.key});
@@ -119,6 +120,10 @@ class _ManageStaffPageState extends State<ManageStaffPage> {
             ),
           ),
           actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () {
                 if (id != null) {
@@ -128,10 +133,6 @@ class _ManageStaffPageState extends State<ManageStaffPage> {
                 }
               },
               child: Text(id != null ? 'Save' : 'Add'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
             ),
           ],
         );
@@ -155,6 +156,7 @@ class _ManageStaffPageState extends State<ManageStaffPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.myappbar,
       appBar: AppBar(
         elevation: 0,
         title: const Text('Manage Staff'),
@@ -189,12 +191,17 @@ class _ManageStaffPageState extends State<ManageStaffPage> {
                 margin: const EdgeInsets.all(8.0),
                 child: Center(
                   child: ListTile(
-                    title: Text('${staffData['name']} - ${staffData['role']}'),
+                    title: Text(
+                      '${staffData['name']} - ${staffData['role']}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            'Salary: \$${staffData['salary'].toStringAsFixed(2)} | Contact: ${staffData['contact']}'),
+                          'Salary: \$${staffData['salary'].toStringAsFixed(2)} | Contact: ${staffData['contact']}',
+                          style: TextStyle(color: Colors.pink[400]),
+                        ),
                         Text(
                           'Start Work: ${_formatDate(staffData['created_at'])}',
                         ),

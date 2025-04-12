@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:samnang_ice_cream_roll/admin/pages/admin_page.dart';
-import 'package:samnang_ice_cream_roll/pages/home_stuff.dart';
+import 'package:samnang_ice_cream_roll/staff/pages/home_stuff.dart';
+import 'package:samnang_ice_cream_roll/stocker/pages/stock_page.dart';
 import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,44 +22,49 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> signIn() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      EasyLoading.showError('Please enter email and password');
+      return;
+    }
+
     EasyLoading.show(
-      status: 'Verifying credentials...',
-      maskType: EasyLoadingMaskType.black,
-    );
-    await Future.delayed(const Duration(seconds: 2));
+        status: 'Verifying...', maskType: EasyLoadingMaskType.black);
+
     try {
       QuerySnapshot snapshot = await _firestore
           .collection('stores')
           .where('email', isEqualTo: _emailController.text.trim())
-          .where('password', isEqualTo: _passwordController.text.trim())
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        var userDoc = snapshot.docs.first;
-        String role = userDoc['role'];
-        String email = userDoc['email'];
-
-        await storeEmail(email);
-
-        if (role == 'admin') {
-          EasyLoading.showSuccess('Welcome, Admin!');
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminPage()),
-          );
-        } else if (role == 'staff') {
-          EasyLoading.showSuccess('Welcome, Staff!');
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeStuff(),
-            ),
-            (route) => false,
-          );
-        }
-      } else {
-        EasyLoading.showError('Invalid email or password');
+      if (snapshot.docs.isEmpty) {
+        EasyLoading.showError('Email not found');
+        return;
       }
+
+      var userDoc = snapshot.docs.first;
+      String storedPassword = userDoc['password'];
+
+      if (storedPassword != _passwordController.text.trim()) {
+        EasyLoading.showError('Incorrect password');
+        return;
+      }
+
+      // Store login and navigate
+      String role = userDoc['role'];
+      await storeEmail(userDoc['email']);
+
+      EasyLoading.showSuccess('Welcome, $role!');
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => role == 'admin'
+              ? const AdminPage()
+              : role == 'staff'
+                  ? const HomeStuff()
+                  : StockPage(),
+        ),
+        (route) => false,
+      );
     } catch (e) {
       EasyLoading.showError('Login failed: ${e.toString()}');
     } finally {

@@ -378,9 +378,7 @@ class _ManageMenuPageState extends State<ManageMenuPage> {
         return Container(
           width: double.maxFinite,
           height: double.maxFinite,
-          decoration: const BoxDecoration(
-            gradient: MyColors.gradient,
-          ),
+          decoration: const BoxDecoration(color: Colors.grey),
           child: ListView.builder(
             itemCount: docs.length,
             itemBuilder: (context, index) {
@@ -401,7 +399,15 @@ class _ManageMenuPageState extends State<ManageMenuPage> {
                       )
                     : const Icon(Icons.image, size: 50),
                 title: Text(name),
-                subtitle: Text("\$${price.toStringAsFixed(2)} || $category"),
+                subtitle: Row(
+                  children: [
+                    Text(
+                      "\$${price.toStringAsFixed(2)}",
+                      style: TextStyle(color: Colors.pink),
+                    ),
+                    Text('$category')
+                  ],
+                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -465,6 +471,7 @@ class _ManageMenuPageState extends State<ManageMenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.myappbar,
       appBar: AppBar(
         title: const Text("Manage Ice Cream Menu"),
         actions: [

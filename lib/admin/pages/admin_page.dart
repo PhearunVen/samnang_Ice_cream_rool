@@ -36,23 +36,15 @@ class _AdminPageState extends State<AdminPage> {
       double tempRevenue = 0.0;
       int tempTotalOrders = ordersSnapshot.docs.length;
       Map<String, int> itemsCount = {};
-      // ignore: unused_local_variable
-      int unknownItemCount = 0; // Track unknown items
 
       for (var orderDoc in ordersSnapshot.docs) {
         var orderData = orderDoc.data() as Map<String, dynamic>;
-
         tempRevenue += orderData['totalPrice'] ?? 0.0;
 
         List<dynamic> items = orderData['items'] ?? [];
         for (var item in items) {
           String itemName = item['itemName'] ?? 'Unknown Item';
-          if (itemName == 'Unknown Item') {
-            unknownItemCount++; // Increment unknown item count
-            //  print('Found an unknown item in order: ${orderDoc.id}');
-          } else {
-            itemsCount[itemName] = (itemsCount[itemName] ?? 0) + 1;
-          }
+          itemsCount[itemName] = (itemsCount[itemName] ?? 0) + 1;
         }
       }
 
@@ -64,13 +56,9 @@ class _AdminPageState extends State<AdminPage> {
         averageOrderValue = avgOrderValue;
         totalOrders = tempTotalOrders;
         mostPopularItems = itemsCount;
-        // Optionally, store unknownItemCount in state if needed
       });
-
-      // Log the total number of unknown items
-      //  print('Total unknown items: $unknownItemCount');
     } catch (e) {
-      //  print("Error fetching orders: $e");
+      // Handle error silently or log it as needed
     }
   }
 
@@ -81,10 +69,10 @@ class _AdminPageState extends State<AdminPage> {
           await FirebaseFirestore.instance.collection('menuItems').get();
 
       setState(() {
-        itemMenuCount = snapshot.docs.length; // Count the documents
+        itemMenuCount = snapshot.docs.length;
       });
     } catch (e) {
-      //  print("Error fetching itemMenu count: $e");
+      // Handle error silently or log it as needed
     }
   }
 
@@ -95,88 +83,174 @@ class _AdminPageState extends State<AdminPage> {
       drawer: const MyAdminDrawer(),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: MyColors.gradientColors,
+          gradient: MyColors.gradientColors, // Assumes a predefined gradient
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView(
             children: [
-              // Header
+              // **Header**
               Row(
                 children: [
                   IconButton(
                     onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                    icon: const Icon(Icons.menu),
+                    icon: const Icon(Icons.menu, color: Colors.white, size: 30),
                   ),
-                  const Text(
-                    'Dashboard Admin Ice Cream',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  Text(
+                    'Admin Dashboard ',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black45,
+                          offset: Offset(2.0, 2.0),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
 
-              // Cards for metrics
+              // **Metrics Cards**
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
                   children: [
-                    DashboardCard(
+                    SizedBox(
+                      width: 180,
+                      child: DashboardCard(
                         title: 'Total Orders',
                         count: totalOrders,
-                        icon: Icons.shopping_cart),
-                    DashboardCard(
+                        icon: Icons.shopping_cart,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: 180,
+                      child: DashboardCard(
                         title: 'Total Revenue',
                         count: totalRevenue.toInt(),
-                        icon: Icons.attach_money),
-                    DashboardCard(
+                        icon: Icons.attach_money,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: 180,
+                      child: DashboardCard(
                         title: 'Avg Order Value',
                         count: averageOrderValue.toInt(),
-                        icon: Icons.paid),
-                    DashboardCard(
-                      title: 'Menu Items',
-                      count: itemMenuCount, // Show item count here
-                      icon: Icons.restaurant_menu,
+                        icon: Icons.paid,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: 180,
+                      child: DashboardCard(
+                        title: 'Menu Items',
+                        count: itemMenuCount,
+                        icon: Icons.restaurant_menu,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
-              // Most Popular Items Section
-              // Most Popular Items Section
-              const Text(
+              // **Most Popular Items Section**
+              Text(
                 'Most Popular Orders',
                 style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black45,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
+                ),
               ),
               const Divider(
-                thickness: 3,
-                endIndent: 120,
-                color: Colors.black,
+                thickness: 1,
+                color: Colors.white70,
               ),
               ...mostPopularItems.entries.map((entry) {
-                return ListTile(
-                  title: Text(entry.key),
-                  trailing: Text('Sold: ${entry.value}'),
-                );
+                if (entry.key != 'Unknown Item') {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        leading: Icon(Icons.star, color: Colors.amber),
+                        title: Text(
+                          entry.key,
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                        trailing: Text(
+                          'Sold: ${entry.value}',
+                          style: const TextStyle(
+                              color: Colors.green, fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
               }),
-// Unknown Items Section
-              if (mostPopularItems.containsKey('Unknown Item'))
-                const Text(
+
+              // **Unknown Items Section**
+              if (mostPopularItems.containsKey('Unknown Item')) ...[
+                const SizedBox(height: 20),
+                Text(
                   'Unknown Items',
                   style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.black45,
+                        offset: Offset(2.0, 2.0),
+                      ),
+                    ],
+                  ),
                 ),
-              if (mostPopularItems.containsKey('Unknown Item'))
-                ListTile(
-                  title: const Text('Unknown Item'),
-                  trailing: Text('Sold: ${mostPopularItems['Unknown Item']}'),
+                const Divider(
+                  thickness: 1,
+                  color: Colors.redAccent,
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.warning, color: Colors.redAccent),
+                      title: const Text(
+                        'Unknown Item',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      trailing: Text(
+                        'Sold: ${mostPopularItems['Unknown Item']}',
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -200,28 +274,43 @@ class DashboardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
+      elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Row(
-              children: [
-                Icon(icon, size: 32, color: Colors.black),
-                const SizedBox(width: 10),
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-              ],
+            Icon(
+              icon,
+              size: 40,
+              color: Colors
+                  .blueAccent, // Use a vibrant color or MyColors.primaryColor if defined
             ),
-            const SizedBox(height: 10),
-            Text(count.toString(),
-                style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    count.toString(),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -82,7 +82,7 @@ class _MyAdminDrawerState extends State<MyAdminDrawer> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.coffee_outlined),
+              leading: const Icon(Icons.book_online_outlined),
               title: const Text('Manage Category'),
               onTap: () {
                 // Add navigation logic here
@@ -134,16 +134,16 @@ class _MyAdminDrawerState extends State<MyAdminDrawer> {
                         builder: (context) => const ManageStore()));
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.report_off_outlined),
-              title: const Text('Report'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ReportPage()));
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.report_off_outlined),
+            //   title: const Text('Report'),
+            //   onTap: () {
+            //     Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => const ReportPage()));
+            //   },
+            // ),
             ListTile(
               leading: const Icon(Icons.report_off_outlined),
               title: const Text('Manage Report'),

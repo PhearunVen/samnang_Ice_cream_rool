@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:samnang_ice_cream_roll/pages/order_detail.dart';
+import 'package:samnang_ice_cream_roll/staff/pages/order_detail.dart';
+import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
 
 class ManageOrdersPage extends StatefulWidget {
   const ManageOrdersPage({super.key});
@@ -116,9 +117,10 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.myappbar,
       appBar: AppBar(
         title: const Text('Order List', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blue.shade800,
+        backgroundColor: MyColors.myappbar,
         elevation: 10,
       ),
       body: Column(

@@ -3,7 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:samnang_ice_cream_roll/admin/pages/admin_page.dart';
-import 'package:samnang_ice_cream_roll/screen/staff_main_screen.dart';
+import 'package:samnang_ice_cream_roll/staff/pages/home_stuff.dart';
+import 'package:samnang_ice_cream_roll/stocker/pages/stock_page.dart';
 import 'package:samnang_ice_cream_roll/widgets/login_page.dart';
 import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,7 +67,12 @@ class _SplashScreenState extends State<SplashScreen> {
           } else if (role == 'staff') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const StaffMainScreen()),
+              MaterialPageRoute(builder: (context) => const HomeStuff()),
+            );
+          } else if (role == 'stocker') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => StockPage()),
             );
           } else {
             Navigator.pop(context);

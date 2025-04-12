@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:samnang_ice_cream_roll/admin/admin_model/manage_store_model.dart';
+import 'package:samnang_ice_cream_roll/widgets/my_colors.dart';
 
 class ManageStore extends StatefulWidget {
   const ManageStore({super.key});
@@ -20,6 +21,7 @@ class _ManageStoreState extends State<ManageStore> {
   final _formKey = GlobalKey<FormState>();
   // ignore: unused_field
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   // Fetch data from Firestore and display in the UI
   Stream<List<StoreIceCream>> _fetchStores() {
@@ -153,13 +155,30 @@ class _ManageStoreState extends State<ManageStore> {
                 ),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText:
+                      !_isPasswordVisible, // Toggle password visibility
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible =
+                              !_isPasswordVisible; // Toggle visibility
+                        });
+                      },
+                    ),
+                  ),
                   validator: (value) =>
                       value!.isEmpty ? 'Please enter password' : null,
                 ),
                 DropdownButtonFormField<String>(
                   value: _selectedRole,
-                  items: ['admin', 'staff']
+                  items: ['admin', 'staff', 'stocker']
                       .map((role) => DropdownMenuItem(
                             value: role,
                             child: Text(role),
@@ -180,6 +199,10 @@ class _ManageStoreState extends State<ManageStore> {
             ),
           ),
           actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () {
                 if (storeicecrem != null) {
@@ -190,10 +213,6 @@ class _ManageStoreState extends State<ManageStore> {
               },
               child: Text(storeicecrem != null ? 'Save' : 'Add'),
             ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
           ],
         );
       },
@@ -203,9 +222,10 @@ class _ManageStoreState extends State<ManageStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.myappbar,
       appBar: AppBar(
         title: const Text('Manage Store'),
-        backgroundColor: Colors.purple,
+        backgroundColor: MyColors.myappbar,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
